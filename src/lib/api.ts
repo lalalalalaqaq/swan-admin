@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth-store'
 
+// 开发环境默认走 Vite 代理的 /api，生产环境必须通过 VITE_API_BASE_URL 指定完整后端地址
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+  import.meta.env.VITE_API_BASE_URL ??
+  (import.meta.env.DEV ? '/api' : '')
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
