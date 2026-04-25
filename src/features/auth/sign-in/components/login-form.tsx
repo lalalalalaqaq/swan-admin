@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,7 +24,6 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-  InputOTPSeparator,
 } from '@/components/ui/input-otp'
 
 const formSchema = z.object({
@@ -117,80 +115,110 @@ export function LoginForm(props: Readonly<LoginFormProps>) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('grid gap-4', className)}
+        className={cn(
+          'rounded-[1.75rem] border border-border bg-white px-5 py-5 shadow-sm sm:px-6 sm:py-6',
+          className
+        )}
         {...rest}
       >
-        <FormField
-          control={form.control}
-          name='username'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>用户名</FormLabel>
-              <FormControl>
-                <Input placeholder='admin' autoComplete='username' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className='space-y-4'>
+          <FormField
+            control={form.control}
+            name='username'
+            render={({ field }) => (
+              <FormItem className='space-y-2'>
+                <FormLabel className='text-sm font-semibold text-[#0e0f0c]'>
+                  用户名
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder='请输入用户名'
+                    autoComplete='username'
+                    className='h-11 rounded-[1.1rem] border-border bg-[#f8f7f2] px-4 text-[15px] shadow-none focus-visible:bg-white'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>密码</FormLabel>
-              <FormControl>
-                <PasswordInput
-                  placeholder='********'
-                  autoComplete='current-password'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem className='space-y-2'>
+                <FormLabel className='text-sm font-semibold text-[#0e0f0c]'>
+                  密码
+                </FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder='请输入密码'
+                    autoComplete='current-password'
+                    className='rounded-[1.1rem]'
+                    inputClassName='h-11 rounded-[1.1rem] border-border bg-[#f8f7f2] px-4 pe-12 text-[15px] shadow-none focus-visible:bg-white'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name='otpCode'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='flex items-center gap-1.5'>
-                <ShieldCheck className='h-4 w-4' />
-                动态验证码
-              </FormLabel>
-              <FormControl>
-                <InputOTP
-                  maxLength={6}
-                  {...field}
-                  containerClassName='justify-between sm:[&>[data-slot="input-otp-group"]>div]:w-12'
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription>请输入 6 位 OTP 验证码</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name='otpCode'
+            render={({ field }) => (
+              <FormItem className='space-y-2'>
+                <FormLabel className='flex items-center gap-2 text-sm font-semibold text-[#0e0f0c]'>
+                  <ShieldCheck className='h-4 w-4' />
+                  动态验证码
+                </FormLabel>
+                <FormControl>
+                  <InputOTP
+                    maxLength={6}
+                    {...field}
+                    containerClassName='justify-between'
+                  >
+                    <InputOTPGroup className='w-full justify-between gap-2'>
+                      <InputOTPSlot
+                        index={0}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                      <InputOTPSlot
+                        index={1}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                      <InputOTPSlot
+                        index={2}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                      <InputOTPSlot
+                        index={3}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                      <InputOTPSlot
+                        index={4}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                      <InputOTPSlot
+                        index={5}
+                        className='h-11 w-full rounded-[1.1rem] border border-border bg-[#f8f7f2] text-sm shadow-none first:rounded-[1.1rem] first:border last:rounded-[1.1rem]'
+                      />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <p className='text-xs text-muted-foreground'>
+                  输入 6 位安全码完成校验。
+                </p>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <Button
-          className='mt-2'
+          className='mt-6 h-11 w-full text-base'
           type='submit'
           disabled={loginMutation.isPending}
         >

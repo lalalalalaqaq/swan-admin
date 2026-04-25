@@ -6,6 +6,7 @@ import {
   createQueryClient,
   setQueryClientNavigate,
 } from '@/lib/query-client'
+import { ensureDevAuthSession } from '@/lib/auth-dev'
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
@@ -15,6 +16,7 @@ import { routeTree } from './routeTree.gen'
 import './styles/index.css'
 
 const queryClient = createQueryClient()
+ensureDevAuthSession()
 
 const router = createRouter({
   routeTree,

@@ -26,6 +26,11 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/market-api': {
+        target: 'http://43.167.207.108:19090',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/market-api/, ''),
+      },
     },
   },
 })

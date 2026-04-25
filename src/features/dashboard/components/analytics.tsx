@@ -10,19 +10,23 @@ import { AnalyticsChart } from './analytics-chart'
 export function Analytics() {
   return (
     <div className='space-y-4'>
-      <Card>
-        <CardHeader>
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>Weekly clicks and unique visitors</CardDescription>
+      <Card className='rounded-[2.5rem]'>
+        <CardHeader className='gap-3 border-b border-border pb-6'>
+          <CardTitle className='text-3xl font-black tracking-[-0.05em]'>
+            流量与转化分析
+          </CardTitle>
+          <CardDescription className='text-sm leading-6'>
+            观察最近一周的点击、独立访问与回访质量。
+          </CardDescription>
         </CardHeader>
-        <CardContent className='px-6'>
+        <CardContent className='px-6 pt-6'>
           <AnalyticsChart />
         </CardContent>
       </Card>
       <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-        <Card>
+        <Card className='rounded-[2rem]'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Clicks</CardTitle>
+            <CardTitle className='text-sm font-semibold'>总点击</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -38,15 +42,13 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>1,248</div>
-            <p className='text-xs text-muted-foreground'>+12.4% vs last week</p>
+            <div className='text-3xl font-black tracking-[-0.05em]'>1,248</div>
+            <p className='text-xs text-muted-foreground'>较上周 +12.4%</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className='rounded-[2rem]'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Unique Visitors
-            </CardTitle>
+            <CardTitle className='text-sm font-semibold'>独立访客</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -62,13 +64,13 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>832</div>
-            <p className='text-xs text-muted-foreground'>+5.8% vs last week</p>
+            <div className='text-3xl font-black tracking-[-0.05em]'>832</div>
+            <p className='text-xs text-muted-foreground'>较上周 +5.8%</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className='rounded-[2rem]'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Bounce Rate</CardTitle>
+            <CardTitle className='text-sm font-semibold'>跳出率</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -83,13 +85,13 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>42%</div>
-            <p className='text-xs text-muted-foreground'>-3.2% vs last week</p>
+            <div className='text-3xl font-black tracking-[-0.05em]'>42%</div>
+            <p className='text-xs text-muted-foreground'>较上周 -3.2%</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className='rounded-[2rem]'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Avg. Session</CardTitle>
+            <CardTitle className='text-sm font-semibold'>平均会话</CardTitle>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -105,43 +107,47 @@ export function Analytics() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>3m 24s</div>
-            <p className='text-xs text-muted-foreground'>+18s vs last week</p>
+            <div className='text-3xl font-black tracking-[-0.05em]'>3m 24s</div>
+            <p className='text-xs text-muted-foreground'>较上周 +18s</p>
           </CardContent>
         </Card>
       </div>
       <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-        <Card className='col-span-1 lg:col-span-4'>
-          <CardHeader>
-            <CardTitle>Referrers</CardTitle>
-            <CardDescription>Top sources driving traffic</CardDescription>
+        <Card className='col-span-1 rounded-[2.5rem] lg:col-span-4'>
+          <CardHeader className='gap-3'>
+            <CardTitle className='text-3xl font-black tracking-[-0.05em]'>
+              渠道来源
+            </CardTitle>
+            <CardDescription>当前带来有效流量的主要入口。</CardDescription>
           </CardHeader>
           <CardContent>
             <SimpleBarList
               items={[
-                { name: 'Direct', value: 512 },
+                { name: '直接访问', value: 512 },
                 { name: 'Product Hunt', value: 238 },
-                { name: 'Twitter', value: 174 },
-                { name: 'Blog', value: 104 },
+                { name: 'X / Twitter', value: 174 },
+                { name: '博客内容', value: 104 },
               ]}
               barClass='bg-primary'
               valueFormatter={(n) => `${n}`}
             />
           </CardContent>
         </Card>
-        <Card className='col-span-1 lg:col-span-3'>
-          <CardHeader>
-            <CardTitle>Devices</CardTitle>
-            <CardDescription>How users access your app</CardDescription>
+        <Card className='col-span-1 rounded-[2.5rem] bg-secondary lg:col-span-3'>
+          <CardHeader className='gap-3'>
+            <CardTitle className='text-3xl font-black tracking-[-0.05em]'>
+              访问设备
+            </CardTitle>
+            <CardDescription>当前用户访问设备分布。</CardDescription>
           </CardHeader>
           <CardContent>
             <SimpleBarList
               items={[
-                { name: 'Desktop', value: 74 },
-                { name: 'Mobile', value: 22 },
-                { name: 'Tablet', value: 4 },
+                { name: '桌面端', value: 74 },
+                { name: '移动端', value: 22 },
+                { name: '平板端', value: 4 },
               ]}
-              barClass='bg-muted-foreground'
+              barClass='bg-[#0e0f0c]'
               valueFormatter={(n) => `${n}%`}
             />
           </CardContent>
@@ -168,17 +174,17 @@ function SimpleBarList({
         return (
           <li key={i.name} className='flex items-center justify-between gap-3'>
             <div className='min-w-0 flex-1'>
-              <div className='mb-1 truncate text-xs text-muted-foreground'>
+              <div className='mb-2 truncate text-xs font-semibold text-muted-foreground'>
                 {i.name}
               </div>
-              <div className='h-2.5 w-full rounded-full bg-muted'>
+              <div className='h-3 w-full rounded-full bg-muted'>
                 <div
-                  className={`h-2.5 rounded-full ${barClass}`}
+                  className={`h-3 rounded-full ${barClass}`}
                   style={{ width }}
                 />
               </div>
             </div>
-            <div className='ps-2 text-xs font-medium tabular-nums'>
+            <div className='ps-2 text-xs font-semibold tabular-nums'>
               {valueFormatter(i.value)}
             </div>
           </li>

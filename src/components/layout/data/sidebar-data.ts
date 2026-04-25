@@ -1,16 +1,12 @@
 import {
+  ArrowLeftRight,
   AudioWaveform,
+  CandlestickChart,
   Command,
   GalleryVerticalEnd,
   LayoutDashboard,
   ListTodo,
-  Package,
-  Settings,
-  ShoppingCart,
-  Store,
-  Truck,
-  UserCog,
-  Warehouse,
+  Logs,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -47,39 +43,19 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title: '店铺管理',
-          url: '/stores',
-          icon: Store,
+          title: 'scargil',
+          url: '/scargil',
+          icon: ArrowLeftRight,
         },
         {
-          title: '销售管理',
-          icon: ShoppingCart,
+          title: 'squirrel',
+          icon: CandlestickChart,
           items: [
-            { title: 'Listing 列表', url: '/sales/listing' },
-            { title: '平台订单列表', url: '/sales/orders' },
-            { title: '售后订单', url: '/sales/after-sales' },
-          ],
-        },
-        {
-          title: '物流管理',
-          url: '/logistics',
-          icon: Truck,
-        },
-        {
-          title: '采购管理',
-          icon: Package,
-          items: [
-            { title: '采购计划', url: '/purchase/plan' },
-            { title: '采购订单', url: '/purchase/orders' },
-          ],
-        },
-        {
-          title: '仓库管理',
-          icon: Warehouse,
-          items: [
-            { title: '库存总览', url: '/warehouse/overview' },
-            { title: '库存明细', url: '/warehouse/details' },
-            { title: '库存单据', url: '/warehouse/documents' },
+            {
+              title: '实时行情',
+              url: '/squirrel',
+              icon: CandlestickChart,
+            },
           ],
         },
         {
@@ -87,21 +63,10 @@ export const sidebarData: SidebarData = {
           url: '/tasks',
           icon: ListTodo,
         },
-      ],
-    },
-    {
-      title: '其他',
-      items: [
         {
-          title: '设置',
-          icon: Settings,
-          items: [
-            {
-              title: '个人资料',
-              url: '/settings',
-              icon: UserCog,
-            },
-          ],
+          title: '日志',
+          url: '/logs',
+          icon: Logs,
         },
       ],
     },

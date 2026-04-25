@@ -25,9 +25,10 @@ function getInitials(name: string) {
 }
 
 export function NavUser() {
-  const { isMobile } = useSidebar()
+  const { isMobile, state } = useSidebar()
   const [open, setOpen] = useDialogState()
   const userName = useAuthStore((s) => s.auth.user?.name) ?? '—'
+  const isCollapsed = state === 'collapsed' && !isMobile
 
   return (
     <>
@@ -37,6 +38,7 @@ export function NavUser() {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size='lg'
+                tooltip={isCollapsed ? userName : undefined}
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
                 <Avatar className='h-8 w-8 rounded-lg'>
@@ -44,10 +46,14 @@ export function NavUser() {
                     {getInitials(userName)}
                   </AvatarFallback>
                 </Avatar>
-                <div className='grid flex-1 text-start text-sm leading-tight'>
+                <div
+                  className={isCollapsed
+                    ? 'hidden'
+                    : 'grid flex-1 text-start text-sm leading-tight'}
+                >
                   <span className='truncate font-semibold'>{userName}</span>
                 </div>
-                <ChevronsUpDown className='ms-auto size-4' />
+                {!isCollapsed && <ChevronsUpDown className='ms-auto size-4' />}
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent

@@ -5,6 +5,7 @@ import {
   type QueryClientConfig,
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { isSkipAuthEnabled } from '@/lib/auth-dev'
 import { useAuthStore } from '@/stores/auth-store'
 import { handleServerError } from '@/lib/handle-server-error'
 
@@ -20,6 +21,11 @@ const queryCache = new QueryCache({
     if (error instanceof AxiosError) {
       const status = error.response?.status
       if (status === 401) {
+        if (isSkipAuthEnabled()) {
+          toast.error('当前启用了 VITE_SKIP_AUTH，已跳过登录重定向')
+          return
+        }
+
         useAuthStore.getState().auth.reset()
         toast.error('登录已过期，请重新登录')
         const redirect =
