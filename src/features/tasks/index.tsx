@@ -1,29 +1,29 @@
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { TasksDialogs } from './components/tasks-dialogs'
-import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
-import { TasksProvider } from './components/tasks-provider'
-import { TasksTable } from './components/tasks-table'
+import { ListTodo } from 'lucide-react'
+import { AdminPage } from '@/components/admin-page'
 
 export function Tasks() {
   return (
-    <TasksProvider>
-      <Header fixed />
-
-      <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <div className='flex flex-wrap items-end justify-between gap-2'>
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight'>任务</h2>
-            <p className='text-muted-foreground'>
-              加油完成任务哦
-            </p>
-          </div>
-          <TasksPrimaryButtons />
-        </div>
-        <TasksTable />
-      </Main>
-
-      <TasksDialogs />
-    </TasksProvider>
+    <AdminPage
+      title='Tasks'
+      description='This page is reserved for internal work tracking and delivery coordination. Template data has been removed so the next phase can plug into the real task model cleanly.'
+      icon={ListTodo}
+      sections={[
+        {
+          title: 'Task List',
+          description:
+            'Phase 06 will connect the swan-app-mgt task list, filters, and pagination.',
+        },
+        {
+          title: 'Task Updates',
+          description:
+            'Create, edit, and batch actions will be introduced after the route and shell are stable.',
+        },
+        {
+          title: 'Task Ownership',
+          description:
+            'Status, priority, and operational history will replace the generic template actions.',
+        },
+      ]}
+    />
   )
 }

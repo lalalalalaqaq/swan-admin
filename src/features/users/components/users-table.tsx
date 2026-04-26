@@ -106,7 +106,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         filters={[
           {
             columnId: 'status',
-            title: '状态',
+            title: 'Status',
             options: [
               { label: 'Active', value: 'active' },
               { label: 'Inactive', value: 'inactive' },
@@ -116,7 +116,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
           },
           {
             columnId: 'role',
-            title: '角色',
+            title: 'Role',
             options: roles.map((role) => ({ ...role })),
           },
         ]}

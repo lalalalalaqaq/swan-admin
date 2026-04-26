@@ -40,7 +40,7 @@ export function DataTableBulkActions<TData>({
   // Announce selection changes to screen readers
   useEffect(() => {
     if (selectedCount > 0) {
-      const message = `已选 ${selectedCount} 个${entityName}，可使用批量操作。`
+      const message = `${selectedCount} ${entityName}${selectedCount > 1 ? 's' : ''} selected. Bulk actions toolbar is available.`
 
       // Use queueMicrotask to defer state update and avoid cascading renders
       queueMicrotask(() => {
@@ -138,7 +138,7 @@ export function DataTableBulkActions<TData>({
       <div
         ref={toolbarRef}
         role='toolbar'
-        aria-label={`已选 ${selectedCount} 个${entityName}的批量操作`}
+        aria-label={`Bulk actions for ${selectedCount} selected ${entityName}${selectedCount > 1 ? 's' : ''}`}
         aria-describedby='bulk-actions-description'
         tabIndex={-1}
         onKeyDown={handleKeyDown}
@@ -163,15 +163,15 @@ export function DataTableBulkActions<TData>({
                 size='icon'
                 onClick={handleClearSelection}
                 className='size-6 rounded-full'
-                aria-label='取消选择'
-                title='取消选择 (Esc)'
+                aria-label='Clear selection'
+                title='Clear selection (Escape)'
               >
                 <X />
-                <span className='sr-only'>取消选择</span>
+                <span className='sr-only'>Clear selection</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>取消选择 (Esc)</p>
+              <p>Clear selection (Escape)</p>
             </TooltipContent>
           </Tooltip>
 
@@ -193,9 +193,10 @@ export function DataTableBulkActions<TData>({
               {selectedCount}
             </Badge>{' '}
             <span className='hidden sm:inline'>
-              个{entityName}
+              {entityName}
+              {selectedCount > 1 ? 's' : ''}
             </span>{' '}
-            已选
+            selected
           </div>
 
           <Separator

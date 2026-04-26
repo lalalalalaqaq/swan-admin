@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 const data = [
   {
@@ -54,18 +54,17 @@ const data = [
 export function Overview() {
   return (
     <ResponsiveContainer width='100%' height={350}>
-      <BarChart data={data} barCategoryGap='28%'>
-        <CartesianGrid vertical={false} stroke='rgb(14 15 12 / 0.08)' />
+      <BarChart data={data}>
         <XAxis
           dataKey='name'
-          stroke='#868685'
+          stroke='#888888'
           fontSize={12}
           tickLine={false}
           axisLine={false}
         />
         <YAxis
           direction='ltr'
-          stroke='#868685'
+          stroke='#888888'
           fontSize={12}
           tickLine={false}
           axisLine={false}
@@ -73,8 +72,9 @@ export function Overview() {
         />
         <Bar
           dataKey='total'
-          fill='#9fe870'
-          radius={[14, 14, 0, 0]}
+          fill='currentColor'
+          radius={[4, 4, 0, 0]}
+          className='fill-primary'
         />
       </BarChart>
     </ResponsiveContainer>

@@ -16,7 +16,7 @@ type TaskMultiDeleteDialogProps<TData> = {
   table: Table<TData>
 }
 
-const CONFIRM_WORD = '删除'
+const CONFIRM_WORD = 'DELETE'
 
 export function TasksMultiDeleteDialog<TData>({
   open,
@@ -29,20 +29,22 @@ export function TasksMultiDeleteDialog<TData>({
 
   const handleDelete = () => {
     if (value.trim() !== CONFIRM_WORD) {
-      toast.error(`请输入「${CONFIRM_WORD}」以确认。`)
+      toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
       return
     }
 
     onOpenChange(false)
 
     toast.promise(sleep(2000), {
-      loading: '正在删除任务...',
+      loading: 'Deleting tasks...',
       success: () => {
         setValue('')
         table.resetRowSelection()
-        return `已删除 ${selectedRows.length} 个任务`
+        return `Deleted ${selectedRows.length} ${
+          selectedRows.length > 1 ? 'tasks' : 'task'
+        }`
       },
-      error: '操作失败',
+      error: 'Error',
     })
   }
 
@@ -50,7 +52,7 @@ export function TasksMultiDeleteDialog<TData>({
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
-      handleConfirm={handleDelete}
+      form='tasks-multi-delete-form'
       disabled={value.trim() !== CONFIRM_WORD}
       title={
         <span className='text-destructive'>
@@ -58,33 +60,43 @@ export function TasksMultiDeleteDialog<TData>({
             className='me-1 inline-block stroke-destructive'
             size={18}
           />{' '}
-          删除选中的 {selectedRows.length} 个任务
+          Delete {selectedRows.length}{' '}
+          {selectedRows.length > 1 ? 'tasks' : 'task'}
         </span>
       }
       desc={
-        <div className='space-y-4'>
+        <form
+          id='tasks-multi-delete-form'
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleDelete()
+          }}
+          className='space-y-4'
+        >
           <p className='mb-2'>
-            确定要删除选中的任务吗？此操作无法撤销。
+            Are you sure you want to delete the selected tasks? <br />
+            This action cannot be undone.
           </p>
 
           <Label className='my-4 flex flex-col items-start gap-1.5'>
-            <span className=''>请输入「{CONFIRM_WORD}」以确认：</span>
+            <span className=''>Confirm by typing "{CONFIRM_WORD}":</span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={`输入「${CONFIRM_WORD}」以确认`}
+              placeholder={`Type "${CONFIRM_WORD}" to confirm.`}
+              autoFocus
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>警告</AlertTitle>
+            <AlertTitle>Warning!</AlertTitle>
             <AlertDescription>
-              此操作不可撤销，请谨慎操作。
+              Please be careful, this operation can not be rolled back.
             </AlertDescription>
           </Alert>
-        </div>
+        </form>
       }
-      confirmText='删除'
+      confirmText='Delete'
       destructive
     />
   )

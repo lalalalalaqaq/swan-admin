@@ -21,32 +21,35 @@ type TopNavProps = React.HTMLAttributes<HTMLElement> & {
 export function TopNav({ className, links, ...props }: TopNavProps) {
   return (
     <>
-      <div className='lg:hidden'>
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button size='icon' variant='outline' className='md:size-7'>
-              <Menu />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side='bottom' align='start'>
-            {links.map(({ title, href, isActive, disabled }) => (
-              <DropdownMenuItem key={`${title}-${href}`} asChild>
-                <Link
-                  to={href}
-                  className={!isActive ? 'text-muted-foreground' : ''}
-                  disabled={disabled}
-                >
-                  {title}
-                </Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            size='icon'
+            variant='outline'
+            className={cn('md:size-7 lg:hidden', className)}
+          >
+            <Menu />
+            <span className='sr-only'>Toggle navigation menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side='bottom' align='start'>
+          {links.map(({ title, href, isActive, disabled }) => (
+            <DropdownMenuItem key={`${title}-${href}`} asChild>
+              <Link
+                to={href}
+                className={!isActive ? 'text-muted-foreground' : ''}
+                disabled={disabled}
+              >
+                {title}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <nav
         className={cn(
-          'hidden items-center gap-2 lg:flex',
+          'hidden items-center space-x-4 lg:flex lg:space-x-4 xl:space-x-6',
           className
         )}
         {...props}
@@ -56,12 +59,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             key={`${title}-${href}`}
             to={href}
             disabled={disabled}
-            className={cn(
-              'rounded-full px-4 py-2 text-sm font-semibold tracking-[-0.01em] transition-all duration-200',
-              isActive
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-muted-foreground hover:bg-sidebar-accent hover:text-foreground'
-            )}
+            className={`text-sm font-medium transition-colors hover:text-primary ${isActive ? '' : 'text-muted-foreground'}`}
           >
             {title}
           </Link>

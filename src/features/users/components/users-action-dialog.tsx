@@ -29,15 +29,15 @@ import { type User } from '../data/schema'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, '请输入名'),
-    lastName: z.string().min(1, '请输入姓'),
-    username: z.string().min(1, '请输入用户名'),
-    phoneNumber: z.string().min(1, '请输入手机号'),
+    firstName: z.string().min(1, 'First Name is required.'),
+    lastName: z.string().min(1, 'Last Name is required.'),
+    username: z.string().min(1, 'Username is required.'),
+    phoneNumber: z.string().min(1, 'Phone number is required.'),
     email: z.email({
-      error: (iss) => (iss.input === '' ? '请输入邮箱' : undefined),
+      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
     }),
     password: z.string().transform((pwd) => pwd.trim()),
-    role: z.string().min(1, '请选择角色'),
+    role: z.string().min(1, 'Role is required.'),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
     isEdit: z.boolean(),
   })
@@ -47,7 +47,7 @@ const formSchema = z
       return data.password.length > 0
     },
     {
-      message: '请输入密码',
+      message: 'Password is required.',
       path: ['password'],
     }
   )
@@ -57,7 +57,7 @@ const formSchema = z
       return password.length >= 8
     },
     {
-      message: '密码至少 8 位',
+      message: 'Password must be at least 8 characters long.',
       path: ['password'],
     }
   )
@@ -67,7 +67,7 @@ const formSchema = z
       return /[a-z]/.test(password)
     },
     {
-      message: '密码须包含至少一个小写字母',
+      message: 'Password must contain at least one lowercase letter.',
       path: ['password'],
     }
   )
@@ -77,7 +77,7 @@ const formSchema = z
       return /\d/.test(password)
     },
     {
-      message: '密码须包含至少一个数字',
+      message: 'Password must contain at least one number.',
       path: ['password'],
     }
   )
@@ -87,7 +87,7 @@ const formSchema = z
       return password === confirmPassword
     },
     {
-      message: '两次输入的密码不一致',
+      message: "Passwords don't match.",
       path: ['confirmPassword'],
     }
   )
@@ -145,10 +145,10 @@ export function UsersActionDialog({
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-start'>
-          <DialogTitle>{isEdit ? '编辑用户' : '添加用户'}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit User' : 'Add New User'}</DialogTitle>
           <DialogDescription>
-            {isEdit ? '在此更新用户信息。' : '在此创建新用户。'}
-            完成后点击保存。
+            {isEdit ? 'Update the user here. ' : 'Create new user here. '}
+            Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className='h-105 w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
@@ -164,11 +164,11 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      名
+                      First Name
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='名'
+                        placeholder='John'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -184,11 +184,11 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      姓
+                      Last Name
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='姓'
+                        placeholder='Doe'
                         className='col-span-4'
                         autoComplete='off'
                         {...field}
@@ -204,11 +204,11 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      用户名
+                      Username
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='用户名'
+                        placeholder='john_doe'
                         className='col-span-4'
                         {...field}
                       />
@@ -222,10 +222,10 @@ export function UsersActionDialog({
                 name='email'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>邮箱</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>Email</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='name@example.com'
+                        placeholder='john.doe@gmail.com'
                         className='col-span-4'
                         {...field}
                       />
@@ -240,11 +240,11 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      手机号
+                      Phone Number
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='手机号'
+                        placeholder='+123456789'
                         className='col-span-4'
                         {...field}
                       />
@@ -258,11 +258,11 @@ export function UsersActionDialog({
                 name='role'
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>角色</FormLabel>
+                    <FormLabel className='col-span-2 text-end'>Role</FormLabel>
                     <SelectDropdown
                       defaultValue={field.value}
                       onValueChange={field.onChange}
-                      placeholder='选择角色'
+                      placeholder='Select a role'
                       className='col-span-4'
                       items={roles.map(({ label, value }) => ({
                         label,
@@ -279,11 +279,11 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      密码
+                      Password
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
-                        placeholder='密码'
+                        placeholder='e.g., S3cur3P@ssw0rd'
                         className='col-span-4'
                         {...field}
                       />
@@ -298,12 +298,12 @@ export function UsersActionDialog({
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                     <FormLabel className='col-span-2 text-end'>
-                      确认密码
+                      Confirm Password
                     </FormLabel>
                     <FormControl>
                       <PasswordInput
                         disabled={!isPasswordTouched}
-                        placeholder='再次输入密码'
+                        placeholder='e.g., S3cur3P@ssw0rd'
                         className='col-span-4'
                         {...field}
                       />
@@ -317,7 +317,7 @@ export function UsersActionDialog({
         </div>
         <DialogFooter>
           <Button type='submit' form='user-form'>
-            保存
+            Save changes
           </Button>
         </DialogFooter>
       </DialogContent>

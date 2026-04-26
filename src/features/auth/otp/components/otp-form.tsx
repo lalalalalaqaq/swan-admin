@@ -3,8 +3,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
-import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
+import { sleep, cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -28,11 +29,14 @@ const formSchema = z.object({
     .max(6, 'Please enter the 6-digit code.'),
 })
 
-type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
+interface OtpFormProps extends React.HTMLAttributes<HTMLFormElement> {
+  redirectTo?: string
+}
 
-export function OtpForm({ className, ...props }: OtpFormProps) {
+export function OtpForm({ className, redirectTo, ...props }: OtpFormProps) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const { auth } = useAuthStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,12 +48,23 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    showSubmittedData(data)
 
-    setTimeout(() => {
-      setIsLoading(false)
-      navigate({ to: '/' })
-    }, 1000)
+    toast.promise(sleep(1000), {
+      loading: 'Verifying code...',
+      success: () => {
+        setIsLoading(false)
+        auth.setUser({
+          accountNo: 'SWAN-OPS',
+          email: 'internal@swan.local',
+          role: ['operator'],
+          exp: Date.now() + 24 * 60 * 60 * 1000,
+        })
+        auth.setAccessToken(`mock-access-token-${data.otp}`)
+        navigate({ to: redirectTo || '/', replace: true })
+        return 'Access granted.'
+      },
+      error: 'Verification failed.',
+    })
   }
 
   return (

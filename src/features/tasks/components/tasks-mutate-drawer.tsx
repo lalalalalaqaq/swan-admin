@@ -1,9 +1,7 @@
 import { z } from 'zod'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -25,14 +23,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { createTask, updateTask } from '../api/task-api'
-import { labels, priorities, statuses } from '../data/data'
-import {
-  taskPrioritySchema,
-  taskStatusSchema,
-  taskTagSchema,
-  type Task,
-} from '../data/schema'
+import { type Task } from '../data/schema'
 
 type TaskMutateDrawerProps = {
   open: boolean
@@ -41,10 +32,10 @@ type TaskMutateDrawerProps = {
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, '请输入标题'),
-  status: taskStatusSchema,
-  tag: taskTagSchema,
-  priority: taskPrioritySchema,
+  title: z.string().min(1, 'Title is required.'),
+  status: z.string().min(1, 'Please select a status.'),
+  label: z.string().min(1, 'Please select a label.'),
+  priority: z.string().min(1, 'Please choose a priority.'),
 })
 type TaskForm = z.infer<typeof formSchema>
 
@@ -54,54 +45,22 @@ export function TasksMutateDrawer({
   currentRow,
 }: TaskMutateDrawerProps) {
   const isUpdate = !!currentRow
-  const queryClient = useQueryClient()
 
   const form = useForm<TaskForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: currentRow ?? {
       title: '',
-      status: 'TODO',
-      tag: 'FEATURE',
-      priority: 'MEDIUM',
-    },
-  })
-
-  useEffect(() => {
-    form.reset(
-      currentRow
-        ? {
-            title: currentRow.title,
-            status: currentRow.status,
-            tag: currentRow.tag,
-            priority: currentRow.priority,
-          }
-        : {
-            title: '',
-            status: 'TODO',
-            tag: 'FEATURE',
-            priority: 'MEDIUM',
-          }
-    )
-  }, [currentRow, form, open])
-
-  const saveMutation = useMutation({
-    mutationFn: async (data: TaskForm) => {
-      if (isUpdate && currentRow) {
-        return updateTask({ id: currentRow.id, ...data })
-      }
-
-      return createTask(data)
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['tasks'] })
-      toast.success(isUpdate ? '任务已更新' : '任务已创建')
-      onOpenChange(false)
-      form.reset()
+      status: '',
+      label: '',
+      priority: '',
     },
   })
 
   const onSubmit = (data: TaskForm) => {
-    saveMutation.mutate(data)
+    // do something with the form data
+    onOpenChange(false)
+    form.reset()
+    showSubmittedData(data)
   }
 
   return (
@@ -109,17 +68,17 @@ export function TasksMutateDrawer({
       open={open}
       onOpenChange={(v) => {
         onOpenChange(v)
-        if (!v) {
-          form.reset()
-        }
+        form.reset()
       }}
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-start'>
-          <SheetTitle>{isUpdate ? '编辑' : '新建'}任务</SheetTitle>
+          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
           <SheetDescription>
-            {isUpdate ? '更新任务信息。' : '填写任务信息以新建任务。'}
-            完成后点击保存。
+            {isUpdate
+              ? 'Update the task by providing necessary info.'
+              : 'Add a new task by providing necessary info.'}
+            Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
@@ -133,9 +92,9 @@ export function TasksMutateDrawer({
               name='title'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>标题</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='输入标题' />
+                    <Input {...field} placeholder='Enter a title' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -146,12 +105,18 @@ export function TasksMutateDrawer({
               name='status'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>状态</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <SelectDropdown
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    placeholder='选择状态'
-                    items={statuses}
+                    placeholder='Select dropdown'
+                    items={[
+                      { label: 'In Progress', value: 'in progress' },
+                      { label: 'Backlog', value: 'backlog' },
+                      { label: 'Todo', value: 'todo' },
+                      { label: 'Canceled', value: 'canceled' },
+                      { label: 'Done', value: 'done' },
+                    ]}
                   />
                   <FormMessage />
                 </FormItem>
@@ -159,26 +124,36 @@ export function TasksMutateDrawer({
             />
             <FormField
               control={form.control}
-              name='tag'
+              name='label'
               render={({ field }) => (
                 <FormItem className='relative'>
-                  <FormLabel>标签</FormLabel>
+                  <FormLabel>Label</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className='flex flex-col space-y-1'
                     >
-                      {labels.map((label) => (
-                        <FormItem key={label.value} className='flex items-center'>
-                          <FormControl>
-                            <RadioGroupItem value={label.value} />
-                          </FormControl>
-                          <FormLabel className='font-normal'>
-                            {label.label}
-                          </FormLabel>
-                        </FormItem>
-                      ))}
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='documentation' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>
+                          Documentation
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='feature' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>Feature</FormLabel>
+                      </FormItem>
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='bug' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>Bug</FormLabel>
+                      </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -190,26 +165,31 @@ export function TasksMutateDrawer({
               name='priority'
               render={({ field }) => (
                 <FormItem className='relative'>
-                  <FormLabel>优先级</FormLabel>
+                  <FormLabel>Priority</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className='flex flex-col space-y-1'
                     >
-                      {priorities.map((priority) => (
-                        <FormItem
-                          key={priority.value}
-                          className='flex items-center'
-                        >
-                          <FormControl>
-                            <RadioGroupItem value={priority.value} />
-                          </FormControl>
-                          <FormLabel className='font-normal'>
-                            {priority.label}
-                          </FormLabel>
-                        </FormItem>
-                      ))}
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='high' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>High</FormLabel>
+                      </FormItem>
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='medium' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>Medium</FormLabel>
+                      </FormItem>
+                      <FormItem className='flex items-center'>
+                        <FormControl>
+                          <RadioGroupItem value='low' />
+                        </FormControl>
+                        <FormLabel className='font-normal'>Low</FormLabel>
+                      </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -220,10 +200,10 @@ export function TasksMutateDrawer({
         </Form>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>关闭</Button>
+            <Button variant='outline'>Close</Button>
           </SheetClose>
-          <Button form='tasks-form' type='submit' disabled={saveMutation.isPending}>
-            保存
+          <Button form='tasks-form' type='submit'>
+            Save changes
           </Button>
         </SheetFooter>
       </SheetContent>

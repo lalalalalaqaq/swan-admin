@@ -15,17 +15,6 @@
   }
   body {
     @apply min-h-svh w-full bg-background text-foreground has-[div[data-variant='inset']]:bg-sidebar;
-    font-feature-settings: 'calt' 1;
-    font-variant-ligatures: contextual;
-    font-weight: 500;
-    background-image:
-      radial-gradient(circle at top right, rgb(159 232 112 / 0.12), transparent 22rem),
-      linear-gradient(180deg, rgb(248 247 242) 0%, rgb(242 244 238) 100%);
-  }
-
-  ::selection {
-    background: rgb(159 232 112 / 0.65);
-    color: rgb(14 15 12);
   }
 
   /* Override Radix scroll locking for sticky headers */
@@ -49,40 +38,6 @@
   }
 }
 
-@layer base {
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    font-feature-settings: 'calt' 1;
-  }
-}
-
-@utility text-display-mega {
-  font-family: var(--font-display);
-  font-size: clamp(3.8rem, 7vw, 7.88rem);
-  font-weight: 900;
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-}
-
-@utility text-display-hero {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 5vw, 6rem);
-  font-weight: 900;
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-}
-
-@utility text-display-section {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 3vw, 4rem);
-  font-weight: 900;
-  line-height: 0.88;
-  letter-spacing: -0.04em;
-}
-
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -99,7 +54,7 @@
 }
 
 @utility faded-bottom {
-  @apply after:pointer-events-none after:absolute after:start-0 after:bottom-0 after:hidden after:h-32 after:w-full after:rounded-b-2xl after:bg-[linear-gradient(180deg,transparent_10%,var(--background)_70%)] md:after:block;
+  @apply after:pointer-events-none after:absolute after:inset-s-0 after:bottom-0 after:hidden after:h-32 after:w-full after:rounded-b-2xl after:bg-[linear-gradient(180deg,transparent_10%,var(--background)_70%)] md:after:block;
 }
 
 /* styles.css */

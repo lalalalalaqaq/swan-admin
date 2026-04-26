@@ -26,11 +26,11 @@ const formSchema = z.object({
   file: z
     .instanceof(FileList)
     .refine((files) => files.length > 0, {
-      message: '请选择要上传的文件',
+      message: 'Please upload a file.',
     })
     .refine(
       (files) => ['text/csv'].includes(files?.[0]?.type),
-      '请上传 CSV 格式文件。'
+      'Please upload csv format.'
     ),
 })
 
@@ -59,7 +59,7 @@ export function TasksImportDialog({
         size: file[0].size,
         type: file[0].type,
       }
-      showSubmittedData(fileDetails, '已导入以下文件：')
+      showSubmittedData(fileDetails, 'You have imported the following file:')
     }
     onOpenChange(false)
   }
@@ -74,9 +74,9 @@ export function TasksImportDialog({
     >
       <DialogContent className='gap-2 sm:max-w-sm'>
         <DialogHeader className='text-start'>
-          <DialogTitle>导入任务</DialogTitle>
+          <DialogTitle>Import Tasks</DialogTitle>
           <DialogDescription>
-            从 CSV 文件快速导入任务。
+            Import tasks quickly from a CSV file.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,9 +86,14 @@ export function TasksImportDialog({
               name='file'
               render={() => (
                 <FormItem className='my-2'>
-                  <FormLabel>文件</FormLabel>
+                  <FormLabel>File</FormLabel>
                   <FormControl>
-                    <Input type='file' {...fileRef} className='h-8 py-0' />
+                    <Input
+                      type='file'
+                      accept='text/csv'
+                      {...fileRef}
+                      className='h-8 py-0'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,10 +103,10 @@ export function TasksImportDialog({
         </Form>
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
-            <Button variant='outline'>关闭</Button>
+            <Button variant='outline'>Close</Button>
           </DialogClose>
           <Button type='submit' form='task-import-form'>
-            导入
+            Import
           </Button>
         </DialogFooter>
       </DialogContent>

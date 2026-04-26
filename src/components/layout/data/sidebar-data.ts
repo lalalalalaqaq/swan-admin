@@ -1,72 +1,30 @@
-import {
-  ArrowLeftRight,
-  AudioWaveform,
-  CandlestickChart,
-  Command,
-  GalleryVerticalEnd,
-  LayoutDashboard,
-  ListTodo,
-  Logs,
-} from 'lucide-react'
+import { LayoutDashboard, ListTodo, ScrollText } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: 'Internal Operator',
+    email: 'internal@swan.local',
+    avatar: '/avatars/01.png',
   },
-  teams: [
-    {
-      name: 'Shadcn Admin',
-      logo: Command,
-      plan: 'Vite + ShadcnUI',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-  ],
   navGroups: [
     {
-      title: '主菜单',
+      title: 'Core',
       items: [
         {
-          title: '工作台',
+          title: 'Dashboard',
           url: '/',
           icon: LayoutDashboard,
         },
         {
-          title: 'scargil',
-          url: '/scargil',
-          icon: ArrowLeftRight,
-        },
-        {
-          title: 'squirrel',
-          icon: CandlestickChart,
-          items: [
-            {
-              title: '实时行情',
-              url: '/squirrel',
-              icon: CandlestickChart,
-            },
-          ],
-        },
-        {
-          title: '任务',
+          title: 'Tasks',
           url: '/tasks',
           icon: ListTodo,
         },
         {
-          title: '日志',
+          title: 'Logs',
           url: '/logs',
-          icon: Logs,
+          icon: ScrollText,
         },
       ],
     },

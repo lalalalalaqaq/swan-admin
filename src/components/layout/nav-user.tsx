@@ -1,12 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronsUpDown, LogOut, User } from 'lucide-react'
+import { ChevronsUpDown, LogOut } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { useAuthStore } from '@/stores/auth-store'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -20,15 +18,17 @@ import {
 } from '@/components/ui/sidebar'
 import { SignOutDialog } from '@/components/sign-out-dialog'
 
-function getInitials(name: string) {
-  return name?.slice(0, 2).toUpperCase() || '—'
+type NavUserProps = {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
 }
 
-export function NavUser() {
-  const { isMobile, state } = useSidebar()
+export function NavUser({ user }: NavUserProps) {
+  const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
-  const userName = useAuthStore((s) => s.auth.user?.name) ?? '—'
-  const isCollapsed = state === 'collapsed' && !isMobile
 
   return (
     <>
@@ -38,22 +38,17 @@ export function NavUser() {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size='lg'
-                tooltip={isCollapsed ? userName : undefined}
                 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
               >
                 <Avatar className='h-8 w-8 rounded-lg'>
-                  <AvatarFallback className='rounded-lg'>
-                    {getInitials(userName)}
-                  </AvatarFallback>
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className='rounded-lg'>SW</AvatarFallback>
                 </Avatar>
-                <div
-                  className={isCollapsed
-                    ? 'hidden'
-                    : 'grid flex-1 text-start text-sm leading-tight'}
-                >
-                  <span className='truncate font-semibold'>{userName}</span>
+                <div className='grid flex-1 text-start text-sm leading-tight'>
+                  <span className='truncate font-semibold'>{user.name}</span>
+                  <span className='truncate text-xs'>{user.email}</span>
                 </div>
-                {!isCollapsed && <ChevronsUpDown className='ms-auto size-4' />}
+                <ChevronsUpDown className='ms-auto size-4' />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -65,29 +60,26 @@ export function NavUser() {
               <DropdownMenuLabel className='p-0 font-normal'>
                 <div className='flex items-center gap-2 px-1 py-1.5 text-start text-sm'>
                   <Avatar className='h-8 w-8 rounded-lg'>
-                    <AvatarFallback className='rounded-lg'>
-                      {getInitials(userName)}
-                    </AvatarFallback>
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback className='rounded-lg'>SW</AvatarFallback>
                   </Avatar>
-                  <span className='truncate font-semibold'>{userName}</span>
+                  <div className='grid flex-1 text-start text-sm leading-tight'>
+                    <span className='truncate font-semibold'>{user.name}</span>
+                    <span className='truncate text-xs'>{user.email}</span>
+                  </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link to='/settings'>
-                    <User />
-                    个人资料
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link to='/'>Internal access</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant='destructive'
                 onClick={() => setOpen(true)}
               >
                 <LogOut />
-                退出登录
+                Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

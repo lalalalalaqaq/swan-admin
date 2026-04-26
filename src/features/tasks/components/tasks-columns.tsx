@@ -1,7 +1,8 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { priorities, statuses } from '../data/data'
+import { labels, priorities, statuses } from '../data/data'
 import { type Task } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
@@ -16,7 +17,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     cell: ({ row }) => (
@@ -24,7 +25,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
-        className='translate-y-[2px]'
+        className='translate-y-0.5'
       />
     ),
     enableSorting: false,
@@ -33,29 +34,36 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='ID' />
+      <DataTableColumnHeader column={column} title='Task' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
+    cell: ({ row }) => <div className='w-20'>{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: 'title',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='标题' />
+      <DataTableColumnHeader column={column} title='Title' />
     ),
     meta: {
       className: 'ps-1 max-w-0 w-2/3',
       tdClassName: 'ps-4',
     },
-    cell: ({ row }) => (
-      <span className='truncate font-medium'>{row.getValue('title')}</span>
-    ),
+    cell: ({ row }) => {
+      const label = labels.find((label) => label.value === row.original.label)
+
+      return (
+        <div className='flex space-x-2'>
+          {label && <Badge variant='outline'>{label.label}</Badge>}
+          <span className='truncate font-medium'>{row.getValue('title')}</span>
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'status',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='状态' />
+      <DataTableColumnHeader column={column} title='Status' />
     ),
     meta: { className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => {
@@ -68,7 +76,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
       }
 
       return (
-        <div className='flex w-[100px] items-center gap-2'>
+        <div className='flex w-25 items-center gap-2'>
           {status.icon && (
             <status.icon className='size-4 text-muted-foreground' />
           )}
@@ -83,7 +91,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'priority',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='优先级' />
+      <DataTableColumnHeader column={column} title='Priority' />
     ),
     meta: { className: 'ps-1', tdClassName: 'ps-3' },
     cell: ({ row }) => {

@@ -2,32 +2,12 @@ import { create } from 'zustand'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
-const AUTH_USER = 'auth-user'
 
 interface AuthUser {
-  name: string
+  accountNo: string
   email: string
   role: string[]
   exp: number
-}
-
-function loadUser(): AuthUser | null {
-  try {
-    const raw = getCookie(AUTH_USER)
-    if (!raw) return null
-    const parsed = JSON.parse(decodeURIComponent(raw)) as AuthUser
-    return parsed && typeof parsed.name === 'string' ? parsed : null
-  } catch {
-    return null
-  }
-}
-
-function saveUser(user: AuthUser | null) {
-  if (user) {
-    setCookie(AUTH_USER, encodeURIComponent(JSON.stringify(user)))
-  } else {
-    removeCookie(AUTH_USER)
-  }
 }
 
 interface AuthState {
@@ -44,16 +24,11 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()((set) => {
   const cookieState = getCookie(ACCESS_TOKEN)
   const initToken = cookieState ? JSON.parse(cookieState) : ''
-  const initUser = initToken ? loadUser() : null
-
   return {
     auth: {
-      user: initUser,
+      user: null,
       setUser: (user) =>
-        set((state) => {
-          saveUser(user)
-          return { ...state, auth: { ...state.auth, user } }
-        }),
+        set((state) => ({ ...state, auth: { ...state.auth, user } })),
       accessToken: initToken,
       setAccessToken: (accessToken) =>
         set((state) => {
@@ -63,13 +38,11 @@ export const useAuthStore = create<AuthState>()((set) => {
       resetAccessToken: () =>
         set((state) => {
           removeCookie(ACCESS_TOKEN)
-          removeCookie(AUTH_USER)
-          return { ...state, auth: { ...state.auth, accessToken: '', user: null } }
+          return { ...state, auth: { ...state.auth, accessToken: '' } }
         }),
       reset: () =>
         set((state) => {
           removeCookie(ACCESS_TOKEN)
-          removeCookie(AUTH_USER)
           return {
             ...state,
             auth: { ...state.auth, user: null, accessToken: '' },

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import {
   type SortingState,
@@ -8,14 +8,12 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useQuery } from '@tanstack/react-query'
-import { AlertCircle, LoaderCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   Table,
   TableBody,
@@ -25,17 +23,29 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { fetchTasks } from '../api/task-api'
 import { priorities, statuses } from '../data/data'
+import { type Task } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { tasksColumns as columns } from './tasks-columns'
 
 const route = getRouteApi('/_authenticated/tasks/')
 
-export function TasksTable() {
+type DataTableProps = {
+  data: Task[]
+}
+
+export function TasksTable({ data }: DataTableProps) {
+  // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  // Local state management for table (uncomment to use local-only state, not synced with URL)
+  // const [globalFilter, onGlobalFilterChange] = useState('')
+  // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
+  // const [pagination, onPaginationChange] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+
+  // Synced with URL states (updated to match route search schema defaults)
   const {
     globalFilter,
     onGlobalFilterChange,
@@ -55,22 +65,10 @@ export function TasksTable() {
     ],
   })
 
-  const page = pagination.pageIndex + 1
-  const pageSize = pagination.pageSize
-
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['tasks', { page, pageSize }],
-    queryFn: () => fetchTasks(page, pageSize),
-  })
-
-  const rows = useMemo(() => data?.records ?? [], [data])
-
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: rows,
+    data,
     columns,
-    pageCount: data?.pages ?? 0,
-    manualPagination: true,
     state: {
       sorting,
       columnVisibility,
@@ -92,6 +90,7 @@ export function TasksTable() {
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -100,30 +99,10 @@ export function TasksTable() {
     onColumnFiltersChange,
   })
 
+  const pageCount = table.getPageCount()
   useEffect(() => {
-    ensurePageInRange(data?.pages ?? 0)
-  }, [data?.pages, ensurePageInRange])
-
-  if (isPending) {
-    return (
-      <div className='flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground'>
-        <LoaderCircle className='size-4 animate-spin' />
-        正在加载任务...
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <Alert variant='destructive'>
-        <AlertCircle />
-        <AlertTitle>任务加载失败</AlertTitle>
-        <AlertDescription>
-          {error instanceof Error ? error.message : '请检查接口或登录状态。'}
-        </AlertDescription>
-      </Alert>
-    )
-  }
+    ensurePageInRange(pageCount)
+  }, [pageCount, ensurePageInRange])
 
   return (
     <div
@@ -134,16 +113,16 @@ export function TasksTable() {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='按标题或 ID 筛选...'
+        searchPlaceholder='Filter by title or ID...'
         filters={[
           {
             columnId: 'status',
-            title: '状态',
+            title: 'Status',
             options: statuses,
           },
           {
             columnId: 'priority',
-            title: '优先级',
+            title: 'Priority',
             options: priorities,
           },
         ]}
